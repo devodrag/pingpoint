@@ -1,0 +1,23 @@
+# Gradle
+.gradle/
+build/
+bin/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+.vscode/
+
+# Run directories
+run/
+logs/
+crash-reports/
+
+# Scripts & sensitive tokens
+*.sh
+publish_github.sh

@@ -1,0 +1,120 @@
+import javax.imageio.ImageIO
+import java.awt.Graphics2D
+import java.awt.RenderingHints
+import java.awt.image.BufferedImage
+
+plugins {
+    id 'fabric-loom' version '1.9-SNAPSHOT'
+    id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "Fabric"
+        url = "https://maven.fabricmc.net/"
+    }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+    }
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/releases"
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // =========================================================================
+    // Тестовое окружение (modLocalRuntime - загружаются только в runClient/runServer
+    // и не попадают в итоговый jar-файл мода)
+    // =========================================================================
+
+    // 1. Sodium — мощная оптимизация графического рендеринга и FPS
+    modLocalRuntime "maven.modrinth:sodium:mc1.21.4-0.6.13-fabric"
+
+    // 2. Lithium — оптимизация тиков физики, чанков и логики мобов
+    modLocalRuntime "maven.modrinth:lithium:mc1.21.4-0.14.7-fabric"
+
+    // 3. FerriteCore — снижение потребления оперативной памяти (RAM)
+    modLocalRuntime "maven.modrinth:ferrite-core:7.1.1-fabric"
+
+    // 4. Mod Menu — меню списка установленных модов прямо в игре
+    modLocalRuntime "com.terraformersmc:modmenu:13.0.1"
+}
+
+// Автоматическая генерация валидной PNG иконки для Mod Menu
+tasks.register('generateModIcon') {
+    def iconDest = file("src/main/resources/assets/pingpoint/icon.png")
+    outputs.file(iconDest)
+    doLast {
+        iconDest.parentFile.mkdirs()
+        def srcJpg = file("/home/devodrag/.gemini/antigravity/brain/165018c1-776f-4ade-96da-2de239d1d96f/pingpoint_pixel_icon_1792245039390.jpg")
+        if (srcJpg.exists()) {
+            BufferedImage img = ImageIO.read(srcJpg)
+            if (img != null) {
+                BufferedImage out = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB)
+                Graphics2D g = out.createGraphics()
+                g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR)
+                g.drawImage(img, 0, 0, 128, 128, null)
+                g.dispose()
+                ImageIO.write(out, "PNG", iconDest)
+                println "[PingPoint] Successfully generated icon.png at " + iconDest.absolutePath
+            }
+        }
+    }
+}
+
+processResources {
+    dependsOn generateModIcon
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 21
+    it.options.encoding = "UTF-8"
+}
+
+java {
+    withSourcesJar()
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
+}
+
+// Настройка директории запуска для тестирования
+loom {
+    runs {
+        client {
+            client()
+            setConfigName("Minecraft Client (Test)")
+            ideConfigGenerated(true)
+            runDir("run")
+            programArgs("--username", "DevTester")
+        }
+    }
+}

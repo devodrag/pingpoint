@@ -1,0 +1,3 @@
+# PingPoint Build Notes
+Build using: ./gradlew build
+Output jar: build/libs/pingpoint-1.0.0.jar

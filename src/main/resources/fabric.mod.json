@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "pingpoint",
+  "version": "${version}",
+  "name": "PingPoint",
+  "description": "Contextual 3D ping and waypoint marking system inspired by Apex Legends, Portal 2, and CS2.",
+  "authors": [
+    "PingPoint Team"
+  ],
+  "contact": {
+    "homepage": "https://github.com/pingpoint/pingpoint",
+    "sources": "https://github.com/pingpoint/pingpoint"
+  },
+  "license": "MIT",
+  "icon": "assets/pingpoint/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.pingpoint.PingPointMod"
+    ],
+    "client": [
+      "net.pingpoint.PingPointClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.9",
+    "minecraft": "~1.21.4",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

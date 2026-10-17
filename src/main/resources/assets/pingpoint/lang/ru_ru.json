@@ -1,0 +1,10 @@
+{
+  "category.pingpoint": "PingPoint",
+  "key.pingpoint.ping": "Метка / Круговое меню",
+  "gui.pingpoint.radial_menu": "Колесо меток",
+  "ping.pingpoint.attention": "Сюда",
+  "ping.pingpoint.caution": "Осторожно",
+  "ping.pingpoint.danger": "Опасность",
+  "ping.pingpoint.loot": "Лут",
+  "ping.pingpoint.mine": "Копать"
+}

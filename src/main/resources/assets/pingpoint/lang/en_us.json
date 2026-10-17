@@ -1,0 +1,10 @@
+{
+  "category.pingpoint": "PingPoint",
+  "key.pingpoint.ping": "Ping / Radial Menu",
+  "gui.pingpoint.radial_menu": "Ping Menu",
+  "ping.pingpoint.attention": "Here",
+  "ping.pingpoint.caution": "Caution",
+  "ping.pingpoint.danger": "Danger",
+  "ping.pingpoint.loot": "Loot",
+  "ping.pingpoint.mine": "Mine"
+}
